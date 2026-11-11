@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lazitos 3D · Cositas lindas impresas en 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500;1,600&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================
+   COLORES Y LETRAS (opcional)
+   Para cambiar la paleta, modificar solo estos códigos de color.
+   - --blush: fondo rosado claro (portada, pie, avisos)
+   - --crema: fondo general de la página
+   - --rosa: bordes y detalles rosados
+   - --lazo: color de los botones
+   - --baya: color de los textos y del botón al pasar el mouse
+   - --suave: color de textos secundarios
+   ========================================================== */
+:root{
+  --blush:#FFE9F0; --crema:#FFF8FA; --rosa:#F7B5CB; --lazo:#E56C95; --baya:#7A2F4D; --suave:#B9708A;
+  --serif:"Cormorant Garamond","Playfair Display",Georgia,serif;
+  --sans:"Quicksand","Segoe UI",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--crema);color:var(--baya);font-family:var(--sans);line-height:1.6}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--lazo);outline-offset:3px;border-radius:6px}
+
+/* Portada */
+.hero{background:var(--blush);text-align:center;padding:56px 20px 84px;position:relative}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:22px;
+  background:radial-gradient(circle at 14px 0,var(--blush) 13px,transparent 14px) 0 0/28px 22px repeat-x;transform:translateY(100%)}
+.lazo{width:92px;height:auto;display:block;margin:0 auto 6px}
+.hero h1{font-family:var(--serif);font-style:italic;font-weight:600;font-size:clamp(2.6rem,9vw,4.6rem);margin:0;line-height:1.05}
+.hero p{max-width:34ch;margin:14px auto 22px;font-size:1.05rem;color:var(--suave)}
+.btn{display:inline-block;border:0;cursor:pointer;font:600 1rem var(--sans);text-decoration:none;
+  background:var(--lazo);color:#fff;padding:12px 26px;border-radius:999px;transition:background .2s}
+.btn:hover{background:var(--baya)}
+.btn.suave{background:#fff;color:var(--baya);border:1.5px solid var(--rosa);margin-left:6px}
+.btn.suave:hover{background:var(--rosa);color:var(--baya)}
+.aviso{max-width:640px;margin:52px auto 0;padding:0 20px;text-align:center;font-family:var(--serif);font-style:italic;font-size:1.35rem}
+
+/* Catálogo */
+main{max-width:1060px;margin:0 auto;padding:30px 20px 70px}
+h2{font-family:var(--serif);font-style:italic;font-weight:600;font-size:2rem;text-align:center;margin:0 0 26px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:26px}
+.card{background:#fff;border:1.5px solid var(--rosa);border-radius:28px 28px 22px 22px;overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:0 0 0 6px var(--crema),0 0 0 7px var(--blush);cursor:pointer}
+.card:hover .foto{filter:brightness(1.04)}
+.foto{aspect-ratio:1/1;background:linear-gradient(160deg,var(--blush),var(--rosa));display:grid;place-items:center;font-size:4rem}
+.foto img{width:100%;height:100%;object-fit:cover;display:block}
+.info{padding:16px 18px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
+.info h3{margin:0;font-family:var(--serif);font-size:1.4rem;font-weight:600;line-height:1.15}
+.info p{margin:0;font-size:.92rem;color:var(--suave);flex:1}
+.precio{font-weight:600;font-size:1.15rem}
+.info .btn{margin-top:8px;text-align:center}
+footer{background:var(--blush);text-align:center;padding:34px 20px;color:var(--suave);font-size:.95rem}
+footer a{color:var(--baya);font-weight:600}
+
+/* Ventanas emergentes */
+dialog{border:0;border-radius:26px;padding:0;max-width:460px;width:calc(100% - 28px);background:var(--crema);color:var(--baya);
+  box-shadow:0 20px 60px rgba(122,47,77,.28);max-height:92vh}
+dialog::backdrop{background:rgba(122,47,77,.38)}
+dialog[open]{animation:sube .25s ease-out}
+@keyframes sube{from{opacity:0;transform:translateY(14px)}}
+.modal{padding:26px 24px 24px}
+.modal h2{font-size:1.7rem;margin-bottom:4px}
+.resumen{text-align:center;margin:0 0 14px;font-weight:600}
+.plazo{background:var(--blush);border-radius:16px;padding:10px 14px;text-align:center;font-size:.95rem;margin:14px 0}
+label{display:block;font-weight:600;font-size:.9rem;margin:12px 0 4px}
+input,textarea{width:100%;font:inherit;color:var(--baya);padding:10px 14px;border:1.5px solid var(--rosa);border-radius:14px;background:#fff}
+input:focus,textarea:focus{outline:2px solid var(--lazo);border-color:var(--lazo)}
+.fila{display:grid;grid-template-columns:1fr 96px;gap:12px}
+.err{color:#B3234F;font-size:.85rem;min-height:1.2em;margin:4px 0 0}
+.acciones{display:flex;gap:10px;margin-top:18px}
+.acciones .btn{flex:1;margin:0;text-align:center}
+.ok{text-align:center;padding:36px 24px}
+.ok .lazo{width:70px}
+[hidden]{display:none!important}
+
+/* Detalle de producto */
+#detalle{max-width:780px}
+.det{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding:26px}
+.principal{aspect-ratio:1/1;border-radius:20px;overflow:hidden;background:linear-gradient(160deg,var(--blush),var(--rosa));display:grid;place-items:center;font-size:6rem;border:1.5px solid var(--rosa)}
+.principal img{width:100%;height:100%;object-fit:cover;display:block}
+.miniaturas{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.mini{width:62px;height:62px;border-radius:14px;overflow:hidden;border:2px solid var(--rosa);background:var(--blush);display:grid;place-items:center;font-size:1.6rem;cursor:pointer;padding:0}
+.mini img{width:100%;height:100%;object-fit:cover}
+.mini[aria-current="true"]{border-color:var(--lazo);box-shadow:0 0 0 2px var(--lazo)}
+.det h2{text-align:left;font-size:2rem;margin:0 0 4px}
+.det .precio{font-size:1.4rem}
+.det p{margin:10px 0}
+.det ul{margin:10px 0;padding-left:20px;color:var(--suave)}
+.det li{margin:3px 0}
+.cerrar-x{position:absolute;top:10px;right:12px;width:38px;height:38px;border-radius:50%;border:1.5px solid var(--rosa);background:#fff;color:var(--baya);font-size:1.2rem;cursor:pointer}
+.cerrar-x:hover{background:var(--rosa)}
+@media (max-width:640px){.det{grid-template-columns:1fr;padding:20px}}
+@media (prefers-reduced-motion:reduce){dialog[open]{animation:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<!-- PORTADA: el nombre, el lema y el enlace de Instagram se editan en la ZONA EDITABLE del script (más abajo). -->
+<header class="hero">
+  <svg class="lazo" viewBox="0 0 100 60" aria-hidden="true">
+    <path d="M50 30 C34 6 6 4 6 28 C6 52 34 54 50 30Z" fill="#F7B5CB" stroke="#E56C95" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M50 30 C66 6 94 4 94 28 C94 52 66 54 50 30Z" fill="#F7B5CB" stroke="#E56C95" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M50 30 L40 58 M50 30 L60 58" stroke="#E56C95" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <circle cx="50" cy="30" r="7" fill="#E56C95"/>
+  </svg>
+  <h1 id="nombreTienda"></h1>
+  <p id="lema"></p>
+  <a class="btn" href="#productos" id="btnVer"></a>
+  <a class="btn suave" id="btnIg" target="_blank" rel="noopener">Instagram</a>
+</header>
+
+<p class="aviso" id="avisoPlazo"></p>
+
+<main id="productos">
+  <h2 id="tituloCatalogo"></h2>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer><p id="pie"></p></footer>
+
+<!-- VENTANA DE DETALLE (se abre al tocar un producto). Los textos salen de la lista PRODUCTOS. -->
+<dialog id="detalle" aria-label="Detalle del producto">
+  <button class="cerrar-x" type="button" id="cerrarDetalle" aria-label="Cerrar">✕</button>
+  <div class="det">
+    <div>
+      <div class="principal" id="dPrincipal"></div>
+      <div class="miniaturas" id="dMinis"></div>
+    </div>
+    <div>
+      <h2 id="dNombre"></h2>
+      <span class="precio" id="dPrecio"></span>
+      <p id="dDescripcion"></p>
+      <ul id="dLista"></ul>
+      <div class="plazo" id="dPlazo"></div>
+      <div class="acciones">
+        <button class="btn" type="button" id="dReservar">Reservar</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<!-- VENTANA DE RESERVA (formulario con los datos del comprador). -->
+<dialog id="modal" aria-labelledby="mTitulo">
+  <div class="modal" id="paso1">
+    <h2 id="mTitulo">Reservar producto</h2>
+    <p class="resumen" id="mResumen"></p>
+    <div class="plazo" id="mPlazo"></div>
+    <form id="form" novalidate>
+      <div class="fila">
+        <div><label for="nombre">Nombre completo</label><input id="nombre" name="nombre" autocomplete="name" required></div>
+        <div><label for="cantidad">Cantidad</label><input id="cantidad" name="cantidad" type="number" min="1" max="20" value="1" required></div>
+      </div>
+      <label for="rut">RUT</label><input id="rut" name="rut" placeholder="12.345.678-9" required>
+      <label for="direccion">Dirección de entrega</label><input id="direccion" name="direccion" autocomplete="street-address" required>
+      <label for="correo">Correo electrónico</label><input id="correo" name="correo" type="email" autocomplete="email" required>
+      <label for="nota">Nota para el pedido (opcional)</label><textarea id="nota" name="nota" rows="2"></textarea>
+      <p class="err" id="err" role="alert"></p>
+      <div class="acciones">
+        <button class="btn suave" type="button" id="cancelar">Cancelar</button>
+        <button class="btn" type="submit" id="enviar">Reservar</button>
+      </div>
+    </form>
+  </div>
+  <div class="modal ok" id="paso2" hidden>
+    <svg class="lazo" viewBox="0 0 100 60" aria-hidden="true"><path d="M50 30 C34 6 6 4 6 28 C6 52 34 54 50 30Z M50 30 C66 6 94 4 94 28 C94 52 66 54 50 30Z" fill="#F7B5CB" stroke="#E56C95" stroke-width="2.5"/><circle cx="50" cy="30" r="7" fill="#E56C95"/></svg>
+    <h2>¡Reserva enviada!</h2>
+    <p id="okTexto"></p>
+    <button class="btn" type="button" id="cerrar">Cerrar</button>
+  </div>
+</dialog>
+
+<script>
+/* ==============================================================
+   ★ ZONA EDITABLE ★  (todo lo que se cambia a menudo está aquí)
+
+   GUÍA RÁPIDA
+   1) Textos generales (nombre, lema, plazo, botones)  → bloque TIENDA
+   2) Productos (nombre, precio, textos, fotos)         → lista PRODUCTOS
+   3) Colores                                           → inicio del <style>, sección "COLORES"
+   4) Notificaciones por correo                         → campo "endpoint" en TIENDA
+
+   REGLAS IMPORTANTES AL EDITAR
+   - Los textos van siempre entre comillas "así".
+   - Cada línea termina con coma, excepto la última de cada bloque.
+   - No borrar llaves { }, corchetes [ ] ni comillas.
+   ============================================================== */
+
+const TIENDA = {
+  nombre: "Lazitos 3D",                  // Nombre grande de la portada y de la pestaña
+  lema: "Llaveros, charms y figuritas impresas en 3D, hechas con cariño.", // Frase bajo el nombre
+  textoBotonVer: "Ver productos",        // Botón rosado de la portada
+  tituloCatalogo: "Cositas para reservar", // Título sobre las tarjetas de productos
+  plazo: "1 a 3 días",                   // Tiempo de elaboración (aparece en toda la página)
+  instagram: "https://instagram.com/TU_USUARIO", // Reemplazar TU_USUARIO por el usuario real
+  correo: "tucorreo@gmail.com",          // Correo de respaldo (solo se usa si "endpoint" está vacío)
+
+  /* Para recibir cada pedido en Gmail: crear un formulario gratis en formspree.io,
+     elegir el Gmail de destino y pegar aquí la URL entregada.
+     Ejemplo: endpoint: "https://formspree.io/f/abcdwxyz", */
+  endpoint: "",
+
+  moneda: "$"                            // Símbolo que se muestra antes del precio
+};
+
+/* ---------------------------------------------------------------
+   PRODUCTOS
+   Cada producto es un bloque entre llaves { ... }.
+   Para AGREGAR un producto: copiar un bloque completo (desde { hasta },)
+   pegarlo debajo y cambiar los datos.
+   Para ELIMINAR uno: borrar su bloque completo.
+
+   Campos de cada producto:
+   - nombre:          título del producto (tarjeta y ventana de detalle)
+   - precio:          solo números, sin puntos ni símbolo (3500 = $3.500)
+   - descripcion:     texto corto que aparece en la tarjeta
+   - descripcionLarga: texto más completo que aparece al abrir el producto
+   - detalles:        lista de características (una por línea entre comillas)
+   - imagenes:        lista de fotos. La PRIMERA es la portada de la tarjeta.
+                      Se pueden poner 1, 3, 5 o las que se quieran.
+                      Cada foto puede ser:
+                        a) un archivo subido al mismo lugar que este archivo,
+                           ejemplo: "fotos/lazo-1.jpg"
+                        b) un enlace de internet que empiece con https://
+                        c) un emoji, mientras no existan fotos (ejemplo: "🎀")
+   --------------------------------------------------------------- */
+const PRODUCTOS = [
+  {
+    nombre: "Llavero lazo coquette",
+    precio: 3500,
+    descripcion: "Lazo rosa con argolla dorada. Ideal para mochilas y llaves.",
+    descripcionLarga: "Llavero con forma de lazo, impreso en 3D en tonos pastel. Liviano, resistente y con terminaciones suaves.",
+    detalles: ["Medidas: 5 cm de ancho", "Material: PLA de alta calidad", "Incluye argolla dorada", "Colores a elección (indicar en la nota)"],
+    imagenes: ["🎀", "💗", "✨"]
+  },
+  {
+    nombre: "Charm corazón con lazo",
+    precio: 2500,
+    descripcion: "Mini charm para celular, cartera o audífonos.",
+    descripcionLarga: "Pequeño corazón con lazo para colgar donde se quiera. Se entrega con cadena y mosquetón.",
+    detalles: ["Medidas: 3 cm", "Material: PLA", "Incluye cadena y mosquetón"],
+    imagenes: ["💗", "🎀"]
+  },
+  {
+    nombre: "Mini stand de muñeca",
+    precio: 6000,
+    descripcion: "Base decorativa para exhibir muñecas y figuras pequeñas.",
+    descripcionLarga: "Base estable para exhibir muñecas o figuras de colección en repisas y escritorios.",
+    detalles: ["Altura: 12 cm", "Material: PLA", "Se vende sin la muñeca"],
+    imagenes: ["🧸", "🎀", "✨"]
+  },
+  {
+    nombre: "Llavero gatito rosado",
+    precio: 3500,
+    descripcion: "Gatito articulado en colores pastel.",
+    descripcionLarga: "Gatito con partes móviles, impreso en una sola pieza. Perfecto para regalar.",
+    detalles: ["Medidas: 6 cm", "Material: PLA", "Partes móviles"],
+    imagenes: ["🐱", "💗"]
+  },
+  {
+    nombre: "Soporte para audífonos",
+    precio: 5500,
+    descripcion: "Soporte con diseño de flores y lazos.",
+    descripcionLarga: "Soporte decorativo para dejar los audífonos ordenados sobre el escritorio.",
+    detalles: ["Altura: 18 cm", "Material: PLA", "Base antideslizante"],
+    imagenes: ["🌸", "🎀", "✨"]
+  },
+  {
+    nombre: "Pack de 3 charms",
+    precio: 6500,
+    descripcion: "Tres charms a elección en tonos rosados.",
+    descripcionLarga: "Pack de tres charms para combinar. Los diseños se eligen en la nota del pedido.",
+    detalles: ["3 charms de 3 a 4 cm", "Material: PLA", "Diseños a elección"],
+    imagenes: ["✨", "💗", "🎀"]
+  }
+];
+
+/* ==============================================================
+   FIN DE LA ZONA EDITABLE
+   Desde aquí hacia abajo está el funcionamiento de la página.
+   No es necesario modificar nada.
+   ============================================================== */
+
+const $ = s => document.querySelector(s);
+const clp = n => TIENDA.moneda + n.toLocaleString("es-CL");
+const esc = t => String(t).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const esFoto = s => /\.(jpe?g|png|webp|gif|avif)(\?.*)?$/i.test(s) || /^https?:\/\//i.test(s);
+const pieza = (s, alt) => esFoto(s) ? `<img src="${esc(s)}" alt="${esc(alt)}" loading="lazy">` : esc(s);
+let actual = null;
+
+document.title = TIENDA.nombre + " · Cositas lindas impresas en 3D";
+$("#nombreTienda").textContent = TIENDA.nombre;
+$("#lema").textContent = TIENDA.lema;
+$("#btnVer").textContent = TIENDA.textoBotonVer;
+$("#tituloCatalogo").textContent = TIENDA.tituloCatalogo;
+$("#btnIg").href = TIENDA.instagram;
+$("#avisoPlazo").textContent = "Cada pieza se imprime a pedido: tarda de " + TIENDA.plazo + " en estar lista.";
+$("#pie").innerHTML = "Hecho con cariño · Pedidos y consultas por <a href='" + esc(TIENDA.instagram) + "' target='_blank' rel='noopener'>Instagram</a>";
+
+/* Tarjetas */
+$("#grid").innerHTML = PRODUCTOS.map((p, i) => `
+  <article class="card" data-i="${i}" tabindex="0" role="button" aria-label="Ver detalles de ${esc(p.nombre)}">
+    <div class="foto">${pieza(p.imagenes[0], p.nombre)}</div>
+    <div class="info">
+      <h3>${esc(p.nombre)}</h3>
+      <p>${esc(p.descripcion)}</p>
+      <span class="precio">${clp(p.precio)}</span>
+      <span class="btn">Ver detalles</span>
+    </div>
+  </article>`).join("");
+
+/* Detalle con galería */
+const detalle = $("#detalle");
+function mostrarFoto(i) {
+  const s = actual.imagenes[i];
+  $("#dPrincipal").innerHTML = pieza(s, actual.nombre);
+  [...$("#dMinis").children].forEach((b, k) => b.setAttribute("aria-current", k === i ? "true" : "false"));
+}
+function abrirDetalle(i) {
+  actual = PRODUCTOS[i];
+  $("#dNombre").textContent = actual.nombre;
+  $("#dPrecio").textContent = clp(actual.precio);
+  $("#dDescripcion").textContent = actual.descripcionLarga || actual.descripcion;
+  $("#dLista").innerHTML = (actual.detalles || []).map(d => "<li>" + esc(d) + "</li>").join("");
+  $("#dPlazo").textContent = "Se demora de " + TIENDA.plazo + " en hacerse.";
+  $("#dMinis").innerHTML = actual.imagenes.map((s, k) =>
+    `<button class="mini" type="button" data-k="${k}" aria-label="Ver imagen ${k + 1}">${pieza(s, actual.nombre + " " + (k + 1))}</button>`).join("");
+  mostrarFoto(0);
+  detalle.showModal();
+}
+$("#grid").addEventListener("click", e => { const c = e.target.closest(".card"); if (c) abrirDetalle(+c.dataset.i); });
+$("#grid").addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { const c = e.target.closest(".card"); if (c) { e.preventDefault(); abrirDetalle(+c.dataset.i); } } });
+$("#dMinis").addEventListener("click", e => { const b = e.target.closest(".mini"); if (b) mostrarFoto(+b.dataset.k); });
+$("#cerrarDetalle").onclick = () => detalle.close();
+detalle.addEventListener("click", e => { if (e.target === detalle) detalle.close(); });
+
+/* Reserva */
+const modal = $("#modal");
+$("#dReservar").onclick = () => {
+  detalle.close();
+  $("#mResumen").textContent = actual.nombre + " · " + clp(actual.precio);
+  $("#mPlazo").textContent = "Este producto se demora de " + TIENDA.plazo + " en hacerse.";
+  $("#paso1").hidden = false; $("#paso2").hidden = true;
+  $("#err").textContent = ""; $("#form").reset();
+  modal.showModal();
+};
+$("#cancelar").onclick = () => modal.close();
+$("#cerrar").onclick = () => modal.close();
+modal.addEventListener("click", e => { if (e.target === modal) modal.close(); });
+
+function rutValido(r) {
+  const l = r.replace(/[.\-\s]/g, "").toUpperCase();
+  if (!/^\d{7,8}[\dK]$/.test(l)) return false;
+  const cuerpo = l.slice(0, -1), dv = l.slice(-1);
+  let suma = 0, m = 2;
+  for (let i = cuerpo.length - 1; i >= 0; i--) { suma += +cuerpo[i] * m; m = m === 7 ? 2 : m + 1; }
+  const r2 = 11 - (suma % 11);
+  return dv === (r2 === 11 ? "0" : r2 === 10 ? "K" : String(r2));
+}
+
+$("#form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = Object.fromEntries(new FormData(e.target));
+  const err = $("#err");
+  if (!f.nombre.trim() || !f.direccion.trim()) { err.textContent = "Completar nombre y dirección."; return; }
+  if (!rutValido(f.rut)) { err.textContent = "El RUT no es válido. Revisar el número y el dígito verificador."; return; }
+  if (!/^\S+@\S+\.\S+$/.test(f.correo)) { err.textContent = "Ingresar un correo válido."; return; }
+  err.textContent = "";
+
+  const total = actual.precio * (+f.cantidad || 1);
+  const pedido = {
+    producto: actual.nombre, cantidad: f.cantidad, total: clp(total),
+    nombre: f.nombre, rut: f.rut, direccion: f.direccion, correo: f.correo, nota: f.nota || "-",
+    plazo: TIENDA.plazo, _subject: "Nuevo pedido: " + actual.nombre, _replyto: f.correo
+  };
+  const btn = $("#enviar"); btn.disabled = true; btn.textContent = "Enviando…";
+  try {
+    if (TIENDA.endpoint) {
+      const r = await fetch(TIENDA.endpoint, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(pedido) });
+      if (!r.ok) throw new Error("fallo");
+    } else {
+      const cuerpo = Object.entries(pedido).filter(([k]) => k[0] !== "_").map(([k, v]) => k + ": " + v).join("\n");
+      location.href = "mailto:" + TIENDA.correo + "?subject=" + encodeURIComponent(pedido._subject) + "&body=" + encodeURIComponent(cuerpo);
+    }
+    $("#okTexto").textContent = "Tu pedido de " + actual.nombre + " quedó registrado. Estará listo en " + TIENDA.plazo + " y se coordinará la entrega por correo.";
+    $("#paso1").hidden = true; $("#paso2").hidden = false;
+  } catch (_) {
+    err.textContent = "No se pudo enviar la reserva. Intentar de nuevo o escribir por Instagram.";
+  } finally { btn.disabled = false; btn.textContent = "Reservar"; }
+});
+</script>
+</body>
+</html>
